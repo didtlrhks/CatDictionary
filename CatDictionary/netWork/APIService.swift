@@ -20,7 +20,8 @@ struct APIService: APIServiceProtocol { // API 서비스 구조체를 정의하�
             return
         } // 입력된 url dㅣ nil 인경우 바로 APIError.badURL 오류를 반환하고 함수를 멈춘다.
         let task = URLSession.shared.dataTask(with: url) {(data , response, error) in
-            
+            //url세션을 활용해서 네트워크요청을 생성을 한다 자세하게는 URL 세션은 URL 로 지정된 리소스와 상호작용하기위한 aPi를 제공하는 클래스이고 shared 싱글턴 인스턴스를 사용함으로써, 기본구성의 세션ㅇ르 통해 네트웤작업을 수행함
+            //dataTask with url 이부분은 URL에 대한 HTTPGet 요청을 생성하고 실행하는 작업을 함 이메서드에서는 데이터작업을 위한 URLSessionDataTask 인스턴스를 반환함 끝에 data,res,err 은 클로저이고 각상태가 어떻게 되었는지에 따라서 판별이됨 data는 서버로 부터 받은 데이터이고 성공하면 요청한 리소스내용 res는 서버로부터 받은 응답에 대한 정보를 가지고있ㄴ느 객체임 error 은 error 는 잘못됬을때 나옴
             if let error = error as? URLError {
                 completion(Result.failure(APIError.url(error)))
             }else if  let response = response as? HTTPURLResponse, !(200...299).contains(response.statusCode) {
@@ -38,7 +39,7 @@ struct APIService: APIServiceProtocol { // API 서비스 구조체를 정의하�
             }
         }
 
-        task.resume()
+        task.resume() // 여기서 이제 조건처리르 다하고 시작하는거고나 이게 이제 그럼 호출인가보네 
     }
     
     
