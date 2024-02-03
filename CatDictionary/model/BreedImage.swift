@@ -15,5 +15,5 @@ struct BreedImage: Codable {
     let id: String?
     let url: String?
     let width: Int?
-    
+    // 브리드이미지를 코더블로 설정했고 있을수도 없을수도 있으니 이렇게 해줌 
 }
