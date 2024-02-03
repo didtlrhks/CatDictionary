@@ -45,16 +45,16 @@ struct APIService: APIServiceProtocol { // API 서비스 구조체를 정의하�
     
     
     func fetchBreeds(url: URL?, completion: @escaping(Result<[Breed], APIError>) -> Void) {
-        guard let url = url else {
-            let error = APIError.badURL
+        guard let url = url else { // url 이 nil 인지확인한다 nil일경우에 바로
+            let error = APIError.badURL // 여기서 작업을 종료하고 이를 핸들러에 전달함
             completion(Result.failure(error))
             return
         }
-        let task = URLSession.shared.dataTask(with: url) {(data , response, error) in
+        let task = URLSession.shared.dataTask(with: url) {(data , response, error) in// 네트워크 요청을 시작한다. 비동기적으로 실행이 되ㅕ며, 완료되면 클로저안에 소스코드 실행함
             
-            if let error = error as? URLError {
-                completion(Result.failure(APIError.url(error)))
-            }else if  let response = response as? HTTPURLResponse, !(200...299).contains(response.statusCode) {
+            if let error = error as? URLError { // 에러라면
+                completion(Result.failure(APIError.url(error))) // 에러호출해서 끝내고
+            }else if  let response = response as? HTTPURLResponse, !(200...299).contains(response.statusCode) { // 만약에 속하지않는다면 에러 핸들러에 값을 전달해서 반응이 안좋게 나오도록 유도하고
                 completion(Result.failure(APIError.badResponse(statusCode: response.statusCode)))
             }else if let data = data {
                 let decoder = JSONDecoder()
@@ -64,13 +64,13 @@ struct APIService: APIServiceProtocol { // API 서비스 구조체를 정의하�
                     
                 }catch {
                     completion(Result.failure(APIError.parsing(error as? DecodingError)))
-                }
+                } // 그게아니라면 ,즉 data 가 들어온다면 여기에서 다받고 핸들러에 처리 넘기고
                 
                 
             }
         }
 
-        task.resume()
+        task.resume() // 실행 
         
     }
 }
